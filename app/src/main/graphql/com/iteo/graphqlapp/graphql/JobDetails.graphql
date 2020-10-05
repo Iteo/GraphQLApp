@@ -1,0 +1,27 @@
+query JobDetails(
+  $jobInput: JobInput!,
+  $withCities: Boolean = true,
+  $noCompetition: Boolean = false
+) {
+  job(input: $jobInput) {
+    title
+    tags(first: 3, orderBy: id_ASC) {
+      name
+    }
+  }
+  cities @include(if: $withCities) {
+    name
+    slug
+  }
+  countries {
+    ...LocationFieldsFragment
+  }
+}
+
+fragment LocationFieldsFragment on Country {
+  name
+  isoCode
+  jobs @skip(if: $noCompetition) {
+    title
+  }
+}
